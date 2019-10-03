@@ -1,13 +1,10 @@
 package assign251_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 /**
  * Unit test for simple MemAppender & VelocityLayout
@@ -25,8 +22,8 @@ public class AppTest
 
     @Test
     void testSingletonMemAppenderFunctionality(){
-        MemAppender testInstance1 = MemAppender.getMemAppenderInstance();
-        MemAppender testInstance2 = MemAppender.getMemAppenderInstance();
+        MemAppender testInstance1 = MemAppender.getInstance();
+        MemAppender testInstance2 = MemAppender.getInstance();
 
         assertEquals(testInstance1, testInstance2, "two instances are different, singleton not working");
     }
@@ -40,4 +37,5 @@ public class AppTest
     void nullifyLoggingEvents(){
         loggingEventsArray = null;
     }
+    
 }

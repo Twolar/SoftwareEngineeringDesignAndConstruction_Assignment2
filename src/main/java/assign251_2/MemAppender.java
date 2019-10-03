@@ -1,20 +1,45 @@
 package assign251_2;
 
+import java.util.List;
 
-public class MemAppender 
-{
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.spi.LoggingEvent;
+
+public class MemAppender extends AppenderSkeleton {
     private static MemAppender memAppender = null;
-    public String test;
+    public List loggingEvents;
 
-    private MemAppender(){
-        test = "test singleton";
+    private MemAppender() {
+        // loggingEvents = new List();
     }
-    
-    public static MemAppender getMemAppenderInstance(){
-        if (memAppender == null){
+
+    private MemAppender(List userDefinedList) {
+        loggingEvents = userDefinedList;
+    }
+
+    public static MemAppender getInstance() {
+        if (memAppender == null) {
             memAppender = new MemAppender();
         }
         return memAppender;
+    }
+
+    @Override
+    public void close() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public boolean requiresLayout() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    protected void append(LoggingEvent event) {
+        // TODO Auto-generated method stub
+
     }
 
     
