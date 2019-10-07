@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +20,9 @@ public class AppTest
     private List<LoggingEvent> loggingEventList;
 
     @BeforeEach
-    void initialiaseLoggingEvents() {
+    void initialiase() {
+        BasicConfigurator.configure();
+        
     }
 
     @Test
@@ -31,12 +34,61 @@ public class AppTest
     }
 
     @Test
-    void testMemAppenderFunctionality(){
-        
+    void testGetInstanceNoVariables(){
+        Logger testLogger = Logger.getLogger("MyTestLogger");
+
+        MemAppender testAppender = MemAppender.getInstance();
+        testLogger.addAppender(testAppender);
+
+        testLogger.info("Test info 1");
+        testLogger.warn("Test warn 1");
+        testLogger.debug("Test debug 1");
+        testLogger.error("Test error 1");
+        System.out.println("Hello World");
+    }
+
+    @Test
+    void testGetInstanceWithLayout(){
+        Logger testLogger = Logger.getLogger("MyTestLogger");
+
+        MemAppender testAppender = MemAppender.getInstance();
+        testLogger.addAppender(testAppender);
+
+        testLogger.info("Test info 1");
+        testLogger.warn("Test warn 1");
+        testLogger.debug("Test debug 1");
+        testLogger.error("Test error 1");
+        System.out.println("Hello World");
+    }
+    @Test
+    void testGetInstanceWithUserList(){
+        Logger testLogger = Logger.getLogger("MyTestLogger");
+
+        MemAppender testAppender = MemAppender.getInstance();
+        testLogger.addAppender(testAppender);
+
+        testLogger.info("Test info 1");
+        testLogger.warn("Test warn 1");
+        testLogger.debug("Test debug 1");
+        testLogger.error("Test error 1");
+        System.out.println("Hello World");
+    }
+    @Test
+    void testGetInstanceWithLayoutAndUserList(){
+        Logger testLogger = Logger.getLogger("MyTestLogger");
+
+        MemAppender testAppender = MemAppender.getInstance();
+        testLogger.addAppender(testAppender);
+
+        testLogger.info("Test info 1");
+        testLogger.warn("Test warn 1");
+        testLogger.debug("Test debug 1");
+        testLogger.error("Test error 1");
+        System.out.println("Hello World");
     }
 
     @AfterEach
-    void nullifyLoggingEvents(){
+    void nullify(){
     }
     
 }

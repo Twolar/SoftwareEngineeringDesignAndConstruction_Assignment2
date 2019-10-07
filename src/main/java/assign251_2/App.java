@@ -9,12 +9,9 @@ public class App {
 
 	public static void main(String[] args) {
         BasicConfigurator.configure();
-        MemAppender testAppender = MemAppender.getInstance();
-        
-        testAppender.setLayout(new SimpleLayout());
-
         Logger testLogger = Logger.getLogger("MyTestLogger");
-
+        
+        MemAppender testAppender = MemAppender.getInstance(new SimpleLayout());
         testLogger.addAppender(testAppender);
 
         testLogger.info("Test info 1");

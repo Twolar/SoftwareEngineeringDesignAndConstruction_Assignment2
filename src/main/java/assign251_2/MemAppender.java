@@ -6,36 +6,45 @@ import java.util.List;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
-import org.omg.CORBA.Environment;
 
 public class MemAppender extends AppenderSkeleton {
 
     private static MemAppender memAppender = null;
     private static int maxSize;
     private static List<LoggingEvent> loggingEvents = null;
+    private static Layout memAppenderLayout = null;
 
     private MemAppender() {
-        if(loggingEvents == null){
+        if (loggingEvents == null) {
             loggingEvents = new ArrayList<LoggingEvent>();
+        }
+        if (memAppenderLayout != null) { // Come back to double check that there is another way of assigning this!
+            setLayout(memAppenderLayout);
         }
     }
 
-    public static MemAppender getInstance(){
-        if(memAppender == null){
+    public static MemAppender getInstance() {
+        if (memAppender == null) {
             memAppender = new MemAppender();
         }
         return memAppender;
     }
 
-    public static MemAppender getInstance(Layout layout){
+    public static MemAppender getInstance(Layout layout) {
+        memAppenderLayout = layout;
+        memAppender = getInstance();
         return memAppender;
     }
 
     public static MemAppender getInstance(List<LoggingEvent> events){
+        loggingEvents = events;
+        memAppender = getInstance();
         return memAppender;
     }
 
     public static MemAppender getInstance(Layout layout, List<LoggingEvent> events){
+        getInstance(layout);
+        getInstance(events);
         return memAppender;
     }
 
