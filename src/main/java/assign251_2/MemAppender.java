@@ -1,46 +1,56 @@
 package assign251_2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
+import org.omg.CORBA.Environment;
 
 public class MemAppender extends AppenderSkeleton {
+
     private static MemAppender memAppender = null;
-    public List loggingEvents;
+    private static int maxSize;
+    private static List<LoggingEvent> loggingEvents = null;
 
     private MemAppender() {
-        // loggingEvents = new List();
+        if(loggingEvents == null){
+            loggingEvents = new ArrayList<LoggingEvent>();
+        }
     }
 
-    private MemAppender(List userDefinedList) {
-        loggingEvents = userDefinedList;
-    }
-
-    public static MemAppender getInstance() {
-        if (memAppender == null) {
+    public static MemAppender getInstance(){
+        if(memAppender == null){
             memAppender = new MemAppender();
         }
         return memAppender;
     }
 
+    public static MemAppender getInstance(Layout layout){
+        return memAppender;
+    }
+
+    public static MemAppender getInstance(List<LoggingEvent> events){
+        return memAppender;
+    }
+
+    public static MemAppender getInstance(Layout layout, List<LoggingEvent> events){
+        return memAppender;
+    }
+
     @Override
     public void close() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public boolean requiresLayout() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     protected void append(LoggingEvent event) {
-        // TODO Auto-generated method stub
-
+        loggingEvents.add(event);
     }
 
-    
 }

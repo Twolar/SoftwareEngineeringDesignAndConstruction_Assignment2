@@ -2,6 +2,10 @@ package assign251_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggingEvent;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,17 +15,15 @@ import org.junit.jupiter.api.Test;
  */
 public class AppTest 
 {
-    private String[] loggingEventsArray;
+
+    private List<LoggingEvent> loggingEventList;
+
     @BeforeEach
-    void initialiaseLoggingEvents(){
-        loggingEventsArray = new String[3];
-        loggingEventsArray[0] = "TEST ONE";
-        loggingEventsArray[1] = "TEST TWO";
-        loggingEventsArray[2] = "TEST THREE";  
+    void initialiaseLoggingEvents() {
     }
 
     @Test
-    void testSingletonMemAppenderFunctionality(){
+    void testMemAppenderSingleton() {
         MemAppender testInstance1 = MemAppender.getInstance();
         MemAppender testInstance2 = MemAppender.getInstance();
 
@@ -29,13 +31,12 @@ public class AppTest
     }
 
     @Test
-    void testMemAppenderEventListCreation(){
-        assert(true);
+    void testMemAppenderFunctionality(){
+        
     }
 
     @AfterEach
     void nullifyLoggingEvents(){
-        loggingEventsArray = null;
     }
     
 }
