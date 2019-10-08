@@ -39,22 +39,19 @@ public class MemAppender extends AppenderSkeleton {
 
     public static MemAppender getInstance(Layout layout) {
         memAppenderLayout = layout;
-        memAppender = getInstance();
-
+        getInstance();
         return memAppender;
     }
 
     public static MemAppender getInstance(List<LoggingEvent> events){
         loggingEvents = events;
-        memAppender = getInstance();
-
+        getInstance();
         return memAppender;
     }
 
     public static MemAppender getInstance(Layout layout, List<LoggingEvent> events){
         getInstance(layout);
         getInstance(events);
-
         return memAppender;
     }
 
