@@ -22,15 +22,9 @@ public class App {
         MemAppender testAppender = MemAppender.getInstance(new SimpleLayout());
         testLogger.addAppender(testAppender);
 
-        testLogger.info("Test info 1");
-        testLogger.warn("Test warn 1");
-        testLogger.debug("Test debug 1");
-        testLogger.error("Test error 1");
-        testLogger.info("Test info 1");
-        testLogger.warn("Test warn 1");
-        testLogger.debug("Test debug 1");
-        testLogger.error("Test error 1");
-
+        for(int i = 1; i <= 8; i++) {
+                testLogger.info("Test info " + i);
+        }
 
         List<String> testList = testAppender.getEventStrings();
         for (String event : testList) {

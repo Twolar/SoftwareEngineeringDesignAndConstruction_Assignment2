@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.spi.LoggingEvent;
@@ -18,8 +17,6 @@ import org.junit.jupiter.api.Test;
  */
 public class AppTest 
 {
-
-    private List<LoggingEvent> loggingEventList;
 
     @BeforeEach
     void initialiase() {
@@ -36,49 +33,34 @@ public class AppTest
     }
 
     @Test
-    void testGetInstanceNoVariables(){
+    void testAppendFunction(){
+        Logger testLogger = Logger.getLogger("MyTestLogger");
+        MemAppender testAppender = MemAppender.getInstance(new SimpleLayout());
+        testLogger.addAppender(testAppender);
+
+        for(int i = 0; i < 8; i++) {
+            testLogger.info("Test info " + i);
+        }
+        assertEquals(testAppender.getDiscardedLogCount(), 3, "Check max size initialisation is 5, if good, check append function");
+    }
+
+    @Test
+    void testGetCurrentLogs(){
+        Logger testLogger = Logger.getLogger("MyTestLogger");
+        MemAppender testAppender = MemAppender.getInstance(new SimpleLayout());
+        testLogger.addAppender(testAppender);
+
+        LoggingEvent testLoggingEvent = new LoggingEvent(null, testLogger, null, "test", null);
+
+        for(int i = 0; i < 8; i++) {
+            testLogger.info("Test info " + i);
+        }
+
+        List<LoggingEvent> testList = testAppender.getCurrentLogs();
         
-        System.out.println("Hello World");
-    }
-
-    @Test
-    void testGetInstanceWithLayout(){
-        Logger testLogger = Logger.getLogger("MyTestLogger");
-
-        MemAppender testAppender = MemAppender.getInstance();
-        testLogger.addAppender(testAppender);
-
-        testLogger.info("Test info 1");
-        testLogger.warn("Test warn 1");
-        testLogger.debug("Test debug 1");
-        testLogger.error("Test error 1");
-        System.out.println("Hello World");
-    }
-    @Test
-    void testGetInstanceWithUserList(){
-        Logger testLogger = Logger.getLogger("MyTestLogger");
-
-        MemAppender testAppender = MemAppender.getInstance();
-        testLogger.addAppender(testAppender);
-
-        testLogger.info("Test info 1");
-        testLogger.warn("Test warn 1");
-        testLogger.debug("Test debug 1");
-        testLogger.error("Test error 1");
-        System.out.println("Hello World");
-    }
-    @Test
-    void testGetInstanceWithLayoutAndUserList(){
-        Logger testLogger = Logger.getLogger("MyTestLogger");
-
-        MemAppender testAppender = MemAppender.getInstance();
-        testLogger.addAppender(testAppender);
-
-        testLogger.info("Test info 1");
-        testLogger.warn("Test warn 1");
-        testLogger.debug("Test debug 1");
-        testLogger.error("Test error 1");
-        System.out.println("Hello World");
+        // check if list is immutable 
+        
+        testList.add(testLoggingEvent);
     }
 
     @AfterEach
