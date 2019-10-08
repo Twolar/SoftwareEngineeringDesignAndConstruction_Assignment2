@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.spi.LoggingEvent;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,15 +37,7 @@ public class AppTest
 
     @Test
     void testGetInstanceNoVariables(){
-        Logger testLogger = Logger.getLogger("MyTestLogger");
-
-        MemAppender testAppender = MemAppender.getInstance();
-        testLogger.addAppender(testAppender);
-
-        testLogger.info("Test info 1");
-        testLogger.warn("Test warn 1");
-        testLogger.debug("Test debug 1");
-        testLogger.error("Test error 1");
+        
         System.out.println("Hello World");
     }
 

@@ -1,30 +1,37 @@
 package assign251_2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
 
 public class MemAppender extends AppenderSkeleton {
 
+    private static int maxSize = 5;
     private static MemAppender memAppender = null;
-    private static int maxSize;
+    private long discardedLogCount = 0;
     private static List<LoggingEvent> loggingEvents = null;
     private static Layout memAppenderLayout = null;
+
+    private static boolean nullLayout(){
+        if(memAppenderLayout == null){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private MemAppender() {
         if (loggingEvents == null) {
             loggingEvents = new ArrayList<LoggingEvent>();
         }
-        if (memAppenderLayout != null) { // Come back to double check that there is another way of assigning this!
-            setLayout(memAppenderLayout);
-        }
+        setLayout(memAppenderLayout);
     }
 
     public static MemAppender getInstance() {
-        if (memAppender == null) {
+        if ((memAppender == null) || (!nullLayout())) {
             memAppender = new MemAppender();
         }
         return memAppender;
@@ -33,18 +40,21 @@ public class MemAppender extends AppenderSkeleton {
     public static MemAppender getInstance(Layout layout) {
         memAppenderLayout = layout;
         memAppender = getInstance();
+
         return memAppender;
     }
 
     public static MemAppender getInstance(List<LoggingEvent> events){
         loggingEvents = events;
         memAppender = getInstance();
+
         return memAppender;
     }
 
     public static MemAppender getInstance(Layout layout, List<LoggingEvent> events){
         getInstance(layout);
         getInstance(events);
+
         return memAppender;
     }
 
@@ -59,7 +69,57 @@ public class MemAppender extends AppenderSkeleton {
 
     @Override
     protected void append(LoggingEvent event) {
-        loggingEvents.add(event);
+        if(loggingEvents.size() == maxSize){
+            loggingEvents.remove(0);
+            loggingEvents.add(event);
+            discardedLogCount++;
+        } else {
+            loggingEvents.add(event);
+        }
+    }
+
+    public List<LoggingEvent> getCurrentLogs() {
+        List<LoggingEvent> immutableLoggingEventList = 
+            Collections.unmodifiableList(loggingEvents);
+
+        return immutableLoggingEventList;
+    }
+
+    public List<String> getEventStrings() throws Exception {
+        List<String> formattedLoggingEventStringList = new ArrayList<String>();
+        
+        if(!nullLayout()){
+            // Add formatted events to StringList
+            for (LoggingEvent event : loggingEvents){
+                formattedLoggingEventStringList.add(memAppenderLayout.format(event));
+            }
+        } else {
+            throw new Exception(
+                "Cannot perform action that includes formatting if no layout is supplied"
+            );
+        }
+
+        List<String> immutableFormattedLoggingEventStringList = 
+            Collections.unmodifiableList(formattedLoggingEventStringList);
+        return immutableFormattedLoggingEventStringList;
+    }
+
+    public void printLogs() throws Exception {
+        if(!nullLayout()){
+            for (LoggingEvent event : loggingEvents) {
+                    System.out.println(memAppenderLayout.format(event));
+            }
+        } else {
+            throw new Exception(
+                "Cannot perform action that includes formatting if no layout is supplied"
+            );
+        }
+        // Clear all logging events from memory
+        loggingEvents.removeAll(loggingEvents);
+    }
+
+    public long getDiscardedLogCount(){
+        return discardedLogCount;
     }
 
 }
