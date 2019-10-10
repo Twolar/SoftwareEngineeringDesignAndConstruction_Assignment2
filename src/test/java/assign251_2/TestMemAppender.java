@@ -14,9 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for simple MemAppender & VelocityLayout
+ * Unit tests for MemAppender Class
  */
-public class AppTest {
+public class TestMemAppender {
     private Logger testLogger;
     private MemAppender testAppender;
     private MemAppender testAppender2;

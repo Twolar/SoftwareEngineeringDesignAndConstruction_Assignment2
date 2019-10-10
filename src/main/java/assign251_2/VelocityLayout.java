@@ -32,6 +32,7 @@ public class VelocityLayout extends Layout
 
         StringWriter sWriter = new StringWriter();
 
+        // Convert event time stamp from milliseconds to a date
         Date eventDate = new Date(event.getTimeStamp());
 
         context.put("d", eventDate.toString()); // Date

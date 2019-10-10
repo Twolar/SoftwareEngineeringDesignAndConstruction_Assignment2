@@ -47,14 +47,6 @@ public class MemAppender extends AppenderSkeleton {
         return memAppender;
     }
 
-    private static boolean nullLayout(){
-        if(memAppenderLayout == null){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public void setMaxSize(int newMaxSize) {
         maxSize = newMaxSize;
     }
@@ -90,14 +82,14 @@ public class MemAppender extends AppenderSkeleton {
     public List<String> getEventStrings() throws Exception {
         List<String> formattedLoggingEventStringList = new ArrayList<String>();
         
-        if(!nullLayout()){
+        if(memAppenderLayout != null){
             // Add formatted events to StringList
             for (LoggingEvent event : loggingEvents){
                 formattedLoggingEventStringList.add(memAppenderLayout.format(event));
             }
         } else {
             throw new Exception(
-                "Cannot perform action that includes formatting if no layout is supplied"
+                "Cannot perform action that includes formatting if no layout has been supplied"
             );
         }
 
@@ -107,15 +99,10 @@ public class MemAppender extends AppenderSkeleton {
     }
 
     public void printLogs() throws Exception {
-        if(!nullLayout()){
-            for (LoggingEvent event : loggingEvents) {
-                    System.out.println(memAppenderLayout.format(event));
-            }
-        } else {
-            throw new Exception(
-                "Cannot perform action that includes formatting if no layout is supplied"
-            );
+        for (String event : getEventStrings()) {
+            System.out.println(event);
         }
+
         // Clear all logging events from memory
         loggingEvents.removeAll(loggingEvents);
     }
