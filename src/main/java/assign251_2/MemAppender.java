@@ -9,19 +9,11 @@ import org.apache.log4j.spi.LoggingEvent;
 
 public class MemAppender extends AppenderSkeleton {
 
-    private static int maxSize = 5;
+    private int maxSize = 5;
     private static MemAppender memAppender = null;
     private long discardedLogCount = 0;
     private static List<LoggingEvent> loggingEvents = null;
     private static Layout memAppenderLayout = null;
-
-    private static boolean nullLayout(){
-        if(memAppenderLayout == null){
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     private MemAppender() {
         if (loggingEvents == null) {
@@ -31,7 +23,7 @@ public class MemAppender extends AppenderSkeleton {
     }
 
     public static MemAppender getInstance() {
-        if ((memAppender == null) || (!nullLayout())) {
+        if (memAppender == null) {
             memAppender = new MemAppender();
         }
         return memAppender;
@@ -55,8 +47,21 @@ public class MemAppender extends AppenderSkeleton {
         return memAppender;
     }
 
+    private static boolean nullLayout(){
+        if(memAppenderLayout == null){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setMaxSize(int newMaxSize) {
+        maxSize = newMaxSize;
+    }
+
     @Override
     public void close() {
+        discardedLogCount = 0;
     }
 
     @Override
