@@ -19,15 +19,12 @@ public class App {
 
         //BasicConfigurator.configure();
         Logger testLogger = Logger.getLogger("MyTestLogger");
-        MemAppender testAppender = MemAppender.getInstance();
-        MemAppender testAppender2 = MemAppender.getInstance();
-        MemAppender testAppender3 = MemAppender.getInstance();
+        MemAppender testAppender = MemAppender.getInstance(new VelocityLayout("[$p] $c $d: $m"));
         testLogger.addAppender(testAppender);
 
-        for(int i = 0; i < 8; i++) {
-            testLogger.info("Test info " + i);
-        }
+        testLogger.info("Test info 1");
 
+        testAppender.printLogs();
     }
 }
 
