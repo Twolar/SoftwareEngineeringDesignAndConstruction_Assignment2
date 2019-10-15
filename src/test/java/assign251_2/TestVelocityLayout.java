@@ -29,6 +29,7 @@ public class TestVelocityLayout {
     private Logger testLogger = null;
     private String fileAppenderOutputFileName = "testVelocityLayoutOutputLogs.txt"; 
     private MemAppender testMemAppender = null;
+    String expectedOutputString = null;
 
     @BeforeEach
     void initialise() {
@@ -37,35 +38,47 @@ public class TestVelocityLayout {
     }
 
     @Test
-    void testVelocityLayoutOutput() throws Exception {
-        velocityLayoutPattern = "[$p] $c: $m";
-
-        testMemAppender = MemAppender.getInstance(new VelocityLayout(velocityLayoutPattern));
-
+    void testVelocityLayoutLoggerLevel() throws Exception {
+        testMemAppender = MemAppender.getInstance(new VelocityLayout("[$p]"));
         testLogger.addAppender(testMemAppender);
+        testLogger.setLevel(Level.FATAL);
 
-        testLogger.setLevel(Level.WARN);
+        expectedOutputString = "[FATAL]";
 
-        testLogger.info("Test info testVelocityLayoutOutput");
-        testLogger.warn("Test warn testVelocityLayoutOutput");
-
-        String expectedOutput = "[WARN] MyTestLogger: Test warn testVelocityLayoutOutput";
+        testLogger.info("Test info testVelocityLayoutLoggerLevel");
+        testLogger.warn("Test warn testVelocityLayoutLoggerLevel");
+        testLogger.fatal("Test fatal testVelocityLayoutLoggerLevel");
 
         List<String> memAppenderEventStringList = testMemAppender.getEventStrings();
         String memAppenderEventString = memAppenderEventStringList.get(0);
 
         assertNotEquals(null, memAppenderEventString, "memAppenderEventString is null");
-        assertEquals(expectedOutput, memAppenderEventString, "Strings don't match");
+        assertEquals(expectedOutputString, memAppenderEventString, "Strings don't match");
+    }
+
+    @Test
+    void testVelocityLayoutOutput() throws Exception {
+        testMemAppender = MemAppender.getInstance(new VelocityLayout("[$p] $c: $m"));  
+        testLogger.addAppender(testMemAppender);
+
+        testLogger.warn("Test warn testVelocityLayoutOutput");
+
+        expectedOutputString = "[WARN] MyTestLogger: Test warn testVelocityLayoutOutput";
+
+        List<String> memAppenderEventStringList = testMemAppender.getEventStrings();
+        String memAppenderEventString = memAppenderEventStringList.get(0);
+
+        assertNotEquals(null, memAppenderEventString, "memAppenderEventString is null");
+        assertEquals(expectedOutputString, memAppenderEventString, "Strings don't match");
     }
 
     @Test
     void testVelocityLayoutWithDifferentAppenders() throws Exception {
         testMemAppender = MemAppender.getInstance(new VelocityLayout(velocityLayoutPattern));
+        testLogger.addAppender(testMemAppender);
         testLogger.addAppender(
             new FileAppender(new VelocityLayout(velocityLayoutPattern), fileAppenderOutputFileName)
             );
-
-        testLogger.addAppender(testMemAppender);
 
         testLogger.info("Test info testVelocityLayoutWithDifferentAppenders");
 
@@ -88,8 +101,12 @@ public class TestVelocityLayout {
         writer.print("");
         writer.close();
 
+        expectedOutputString = null;
+
         testVelocityLayoutLogFile = null;
         testLogger = null;
-        testMemAppender.close();
+        if (testMemAppender != null) {
+            testMemAppender.close();
+        }
     }
 }

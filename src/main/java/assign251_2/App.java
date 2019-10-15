@@ -32,7 +32,7 @@ public class App {
 
         testLogger.addAppender(testAppender);
 
-        testLogger.info("Test info 1");
+        testLogger.fatal("Test fatal 1");
         testLogger.info("Test info 2");
         testLogger.info("Test info 3");
         testFileLogger.info("Test info 1");
