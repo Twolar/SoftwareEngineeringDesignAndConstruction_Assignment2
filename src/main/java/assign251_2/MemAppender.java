@@ -103,7 +103,7 @@ public class MemAppender extends AppenderSkeleton {
             System.out.println(event);
         }
 
-        // Clear all logging events from memory
+        // Remove all logging events from memory
         loggingEvents.removeAll(loggingEvents);
     }
 

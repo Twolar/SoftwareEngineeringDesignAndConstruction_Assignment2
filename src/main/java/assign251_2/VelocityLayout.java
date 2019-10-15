@@ -1,14 +1,10 @@
 package assign251_2;
 
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Date;
 
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.LoggingEvent;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
@@ -49,13 +45,10 @@ public class VelocityLayout extends Layout
 
     @Override
     public void activateOptions() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public boolean ignoresThrowable() {
-        // TODO Auto-generated method stub
         return false;
     }
 }
