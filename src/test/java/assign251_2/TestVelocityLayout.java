@@ -1,5 +1,6 @@
 package assign251_2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +28,7 @@ public class TestVelocityLayout {
     private String velocityLayoutPattern = "[$p] $c $d: $m";
     private Logger testLogger = null;
     private String fileAppenderOutputFileName = "testVelocityLayoutOutputLogs.txt"; 
+    private MemAppender testMemAppender = null;
 
     @BeforeEach
     void initialise() {
@@ -34,15 +37,37 @@ public class TestVelocityLayout {
     }
 
     @Test
+    void testVelocityLayoutOutput() throws Exception {
+        velocityLayoutPattern = "[$p] $c: $m";
+
+        testMemAppender = MemAppender.getInstance(new VelocityLayout(velocityLayoutPattern));
+
+        testLogger.addAppender(testMemAppender);
+
+        testLogger.setLevel(Level.WARN);
+
+        testLogger.info("Test info testVelocityLayoutOutput");
+        testLogger.warn("Test warn testVelocityLayoutOutput");
+
+        String expectedOutput = "[WARN] MyTestLogger: Test warn testVelocityLayoutOutput";
+
+        List<String> memAppenderEventStringList = testMemAppender.getEventStrings();
+        String memAppenderEventString = memAppenderEventStringList.get(0);
+
+        assertNotEquals(null, memAppenderEventString, "memAppenderEventString is null");
+        assertEquals(expectedOutput, memAppenderEventString, "Strings don't match");
+    }
+
+    @Test
     void testVelocityLayoutWithDifferentAppenders() throws Exception {
-        MemAppender testMemAppender = MemAppender.getInstance(new VelocityLayout(velocityLayoutPattern));
+        testMemAppender = MemAppender.getInstance(new VelocityLayout(velocityLayoutPattern));
         testLogger.addAppender(
             new FileAppender(new VelocityLayout(velocityLayoutPattern), fileAppenderOutputFileName)
             );
 
         testLogger.addAppender(testMemAppender);
 
-        testLogger.info("Test info 1");
+        testLogger.info("Test info testVelocityLayoutWithDifferentAppenders");
 
         List<String> memAppenderEventStringList = testMemAppender.getEventStrings();
         String memAppenderEventString = memAppenderEventStringList.get(0);
@@ -65,6 +90,6 @@ public class TestVelocityLayout {
 
         testVelocityLayoutLogFile = null;
         testLogger = null;
+        testMemAppender.close();
     }
-    
 }

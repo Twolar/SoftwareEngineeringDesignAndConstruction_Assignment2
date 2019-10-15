@@ -2,6 +2,8 @@ package assign251_2;
 
 import java.io.ObjectInputStream.GetField;
 import java.nio.file.FileAlreadyExistsException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sound.midi.Sequencer.SyncMode;
@@ -21,7 +23,7 @@ public class App {
 
         //BasicConfigurator.configure();
         Logger testLogger = Logger.getLogger("MyTestLogger");
-        MemAppender testAppender = MemAppender.getInstance(new VelocityLayout("[$p] $c $d: $m"));
+        MemAppender testAppender = MemAppender.getInstance(new VelocityLayout("[$p] $c: $m"));
         Logger testFileLogger = Logger.getLogger("MyFileTestLogger");
 
         testFileLogger.addAppender(
@@ -39,6 +41,7 @@ public class App {
 
         testAppender.printLogs();
 
+        System.out.println(LocalDateTime.now().toString());
     }
 }
 

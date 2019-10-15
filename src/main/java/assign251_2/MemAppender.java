@@ -54,6 +54,8 @@ public class MemAppender extends AppenderSkeleton {
     @Override
     public void close() {
         discardedLogCount = 0;
+        loggingEvents.removeAll(loggingEvents);
+        memAppender = null;
     }
 
     @Override
@@ -103,7 +105,6 @@ public class MemAppender extends AppenderSkeleton {
             System.out.println(event);
         }
 
-        // Remove all logging events from memory
         loggingEvents.removeAll(loggingEvents);
     }
 
