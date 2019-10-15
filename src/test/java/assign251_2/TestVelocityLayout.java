@@ -14,7 +14,6 @@ import java.util.List;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,49 +22,49 @@ import org.junit.jupiter.api.Test;
  */
 public class TestVelocityLayout {
 
-    Path fileAppenderOutputPath = null;
-    File testVelocityLayoutLogFile = null;
+    private File testVelocityLayoutLogFile = null;
+    private String velocityLayoutPattern = "[$p] $c $d: $m";
+    private Logger testLogger = null;
+    private String fileAppenderOutputFileName = "testVelocityLayoutOutputLogs.txt"; 
 
     @BeforeEach
     void initialise() {
-        testVelocityLayoutLogFile = new File("testVelocityLayoutOutputLogs.txt");
+        testVelocityLayoutLogFile = new File(fileAppenderOutputFileName);
+        testLogger = Logger.getLogger("MyTestLogger");
     }
 
     @Test
-    void testVelocityLayoutOutput() throws Exception {
-        List<String> memAppenderEventStringList = null;
-        List<String> fileAppenderEventStringList = null;
-        String memAppenderEventString = null;
-        String fileAppenderEventString = null;
-        Logger testLogger = Logger.getLogger("MyTestLogger");
-        MemAppender testAppender = MemAppender.getInstance(new VelocityLayout("[$p] $c $d: $m"));
-
+    void testVelocityLayoutWithDifferentAppenders() throws Exception {
+        MemAppender testMemAppender = MemAppender.getInstance(new VelocityLayout(velocityLayoutPattern));
         testLogger.addAppender(
-            new FileAppender(new VelocityLayout("[$p] $c $d: $m"), "testVelocityLayoutOutputLogs.txt")
+            new FileAppender(new VelocityLayout(velocityLayoutPattern), fileAppenderOutputFileName)
             );
 
-        testLogger.addAppender(testAppender);
+        testLogger.addAppender(testMemAppender);
 
         testLogger.info("Test info 1");
 
-        memAppenderEventStringList = testAppender.getEventStrings();
-        memAppenderEventString = memAppenderEventStringList.get(0);
+        List<String> memAppenderEventStringList = testMemAppender.getEventStrings();
+        String memAppenderEventString = memAppenderEventStringList.get(0);
 
-        Path fileAppenderOutputPath = Paths.get("testVelocityLayoutOutputLogs.txt");
-        fileAppenderEventStringList = Files.readAllLines(fileAppenderOutputPath);
-        fileAppenderEventString = fileAppenderEventStringList.get(0);
-
+        Path fileAppenderOutputFilePath = Paths.get(fileAppenderOutputFileName);
+        List<String> fileAppenderEventStringList = Files.readAllLines(fileAppenderOutputFilePath);
+        String fileAppenderEventString = fileAppenderEventStringList.get(0);
+        
         assertNotEquals(null, memAppenderEventString, "memAppenderEventString is null");
         assertNotEquals(null, fileAppenderEventString, "fileAppenderEventString is null");
-        assertTrue(memAppenderEventString.equals(fileAppenderEventString), "Logging Event Strings don't match");
+        assertTrue(memAppenderEventString.equals(fileAppenderEventString), "Logging Event FileAppender & MemAppender Strings don't match");
     } 
 
     @AfterEach
     void nullifyAndDelete () throws FileNotFoundException {
-        // Clear output log file contents.
+        // Clear output log file contents and nullify.
         PrintWriter writer = new PrintWriter(testVelocityLayoutLogFile);
         writer.print("");
         writer.close();
+
+        testVelocityLayoutLogFile = null;
+        testLogger = null;
     }
     
 }
