@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.spi.LoggingEvent;
@@ -38,11 +39,25 @@ public class TestMemAppender {
 
     @Test
     void testAppendFunctionMaxSize() {
+        testAppender.setMaxSize(5);
+
         // Add 8 LoggingEvents
         for (int i = 0; i < 8; i++) {
             testLogger.info("Test info " + i);
         }
+        
+        assertEquals(5, testAppender.getCurrentLogs().size());
+    }
+
+    @Test
+    void testDiscardedLogsCounter(){
         testAppender.setMaxSize(5);
+
+        // Add 8 LoggingEvents
+        for (int i = 0; i < 8; i++) {
+            testLogger.info("Test info " + i);
+        }
+        
         assertEquals(3, testAppender.getDiscardedLogCount());
     }
 
@@ -102,12 +117,12 @@ public class TestMemAppender {
     }
     
     @AfterEach
-    void nullify() throws Exception {
-        testLogger = null;
+    void nullifyAndDelete() throws Exception {
         testAppender.close();
-        testAppender2.close();
+        LogManager.shutdown();
         testAppender = null;
         testAppender2 = null;
         testLoggingEvent = null;
+        testLogger = null;
     }
 }

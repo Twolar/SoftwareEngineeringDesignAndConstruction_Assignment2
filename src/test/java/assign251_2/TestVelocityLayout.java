@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,7 @@ public class TestVelocityLayout {
     private Logger testLogger = null;
     private String fileAppenderOutputFileName = "testVelocityLayoutOutputLogs.txt"; 
     private MemAppender testMemAppender = null;
-    String expectedOutputString = null;
+    private String expectedOutputString = null;
 
     @BeforeEach
     void initialise() {
@@ -91,7 +92,7 @@ public class TestVelocityLayout {
         
         assertNotEquals(null, memAppenderEventString, "memAppenderEventString is null");
         assertNotEquals(null, fileAppenderEventString, "fileAppenderEventString is null");
-        assertTrue(memAppenderEventString.equals(fileAppenderEventString), "Logging Event FileAppender & MemAppender Strings don't match");
+        assertTrue(memAppenderEventString.equals(fileAppenderEventString), "FileAppender & MemAppender LoggingEvent Strings don't match");
     } 
 
     @AfterEach
@@ -104,9 +105,9 @@ public class TestVelocityLayout {
         expectedOutputString = null;
 
         testVelocityLayoutLogFile = null;
-        testLogger = null;
         if (testMemAppender != null) {
             testMemAppender.close();
         }
+        LogManager.shutdown();
     }
 }
