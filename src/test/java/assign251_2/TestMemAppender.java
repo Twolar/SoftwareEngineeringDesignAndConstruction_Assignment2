@@ -118,7 +118,9 @@ public class TestMemAppender {
     
     @AfterEach
     void nullifyAndDelete() throws Exception {
-        testAppender.close();
+        if (testAppender != null) {
+            testAppender.close();
+        }
         LogManager.shutdown();
         testAppender = null;
         testAppender2 = null;
