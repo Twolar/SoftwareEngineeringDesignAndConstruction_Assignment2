@@ -27,9 +27,11 @@ public class VelocityLayout extends Layout
         VelocityContext context = new VelocityContext();
 
         StringWriter sWriter = new StringWriter();
-
+        
         // Convert event time stamp from milliseconds to a date
         Date eventDate = new Date(event.getTimeStamp());
+        
+        
 
         context.put("d", eventDate.toString()); // Date
         context.put("c", event.getLoggerName()); // Category
@@ -39,7 +41,7 @@ public class VelocityLayout extends Layout
         context.put("n", System.lineSeparator()); // Line Separator
 
         Velocity.evaluate(context, sWriter, "VelocityLayout-Format", layoutTemplate);
-
+        
         return sWriter.toString();
     }
 

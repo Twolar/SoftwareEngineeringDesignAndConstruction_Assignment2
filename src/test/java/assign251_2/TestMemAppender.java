@@ -30,6 +30,13 @@ public class TestMemAppender {
         testAppender2 = MemAppender.getInstance(new SimpleLayout());
         testLogger.addAppender(testAppender);
         testLoggingEvent = new LoggingEvent(null, testLogger, null, "test", null);
+        
+        // Tests below, Rely on max size being 5 and with 8 logs passed through.
+        testAppender.setMaxSize(5);
+        // Add 8 LoggingEvents
+            for (int i = 0; i < 8; i++) {
+                testLogger.info("Test info " + i);
+            }
     }
 
     @Test
@@ -39,25 +46,11 @@ public class TestMemAppender {
 
     @Test
     void testAppendFunctionMaxSize() {
-        testAppender.setMaxSize(5);
-
-        // Add 8 LoggingEvents
-        for (int i = 0; i < 8; i++) {
-            testLogger.info("Test info " + i);
-        }
-        
         assertEquals(5, testAppender.getCurrentLogs().size());
     }
 
     @Test
     void testDiscardedLogsCounter(){
-        testAppender.setMaxSize(5);
-
-        // Add 8 LoggingEvents
-        for (int i = 0; i < 8; i++) {
-            testLogger.info("Test info " + i);
-        }
-        
         assertEquals(3, testAppender.getDiscardedLogCount());
     }
 
@@ -67,8 +60,8 @@ public class TestMemAppender {
     */
     @Test
     void testGetCurrentLogs() {
-        List<LoggingEvent> testImuttableList = testAppender.getCurrentLogs();
         try {
+            List<LoggingEvent> testImuttableList = testAppender.getCurrentLogs();
             testImuttableList.add(testLoggingEvent);
             assertFalse(true, "UnsupportedOperationException should be thrown");
         } catch (UnsupportedOperationException e) {
@@ -103,10 +96,6 @@ public class TestMemAppender {
     @Test
     void testPrintLogs(){
         try {
-            // Add 8 LoggingEvents
-            for (int i = 0; i < 8; i++) {
-                testLogger.info("Test info " + i);
-            }
             testAppender.printLogs();
             List<LoggingEvent> testList = testAppender.getCurrentLogs();
             assertEquals(0, testList.size(), "There are still objects in the list");
