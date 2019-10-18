@@ -1,7 +1,6 @@
 package assign251_2;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -62,7 +61,7 @@ public class StressTest {
         for (int i = 0; i < numOfLogEvents; i++) {
             testMemAppenderLogger.info("Test INFO " + i);
         }
-        testMemAppender.printLogs();
+        // testMemAppender.printLogs(); // ENABLE FOR PERFORMANCE TESTING
         
     }
 
@@ -79,7 +78,7 @@ public class StressTest {
         for (int i = 0; i < numOfLogEvents; i++) {
             testMemAppenderLogger.info("Test INFO " + i);
         }
-        testMemAppender.printLogs();
+        // testMemAppender.printLogs(); // ENABLE FOR PERFORMANCE TESTING
     }
 
 
@@ -118,7 +117,7 @@ public class StressTest {
         for (int i = 0; i < numOfLogEvents; i++) {
             testMemAppenderLogger.info("Test INFO " + i);
         }
-        testMemAppender.printLogs();
+        // testMemAppender.printLogs(); // ENABLE FOR PERFORMANCE TESTING
     }
 
 
@@ -133,7 +132,7 @@ public class StressTest {
         for (int i = 0; i < numOfLogEvents; i++) {
             testMemAppenderLogger.info("Test INFO " + i);
         }
-        testMemAppender.printLogs();
+        // testMemAppender.printLogs(); // ENABLE FOR PERFORMANCE TESTING
     }
 
 
